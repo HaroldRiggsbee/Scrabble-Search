@@ -214,15 +214,20 @@ h2{
 <body>
 <script>
 
+//to do
+//create object for scoreboard
+//
 
 // universal variables
+
+	const wordarray = ["aardvark","aardvarks","abaci","aback","abacus","abacuses","abaft","abalone","abalones","abandon","abandoned","abandoning","abandonment","abandonments%","woozy","joke","quiz","one","three","two","five", "car", "bar", "homerun", "ou", "viva", "nova", "week", "shock", "bass", "treble", "staff", "light", "dark", "medium", "rare","common","key","board","bored","You","me","we","see","us","ten","nine","eight","mortal","sub","zero","fall","hungry","card","phone","random","control","pop","stop","drop","shut","down","open","up","shop","oh","no","as","ruff","riders","roll","where","my","dogs","at","bark","aa","bore","board","for","fig","rug","tug","bug","slug","drug","done","hey","bey","bye","by","try","sly","guy","tie","lie","tack","rack","duck","suck","luck","tuck","muck","pluck","stuck","struck","tick","sick","trick","kick","dock","sock","glock","pry","doc","site","test","aid","fade","laid","pic","xi","planet","coal","too","square","circle","standard","dab","bowl","drugs","macro", "apple", "ninja", "mouse", "keys", "trolley", "energy", "fresh", "score", "dumb", "head", "java", "zoo", "brew", "crew", "slay", "find", "wild", "choose"];
+	const alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+	const scores = [1,3,3,2,1,4,2,4,1,8,5,1,3,1,1,3,10,1,1,1,4,1,4,8,4,10];
 	var letterarray = new Array;
-	var wordarray = ["aardvark","aardvarks","abaci","aback","abacus","abacuses","abaft","abalone","abalones","abandon","abandoned","abandoning","abandonment","abandonments%","woozy","joke","quiz","one","three","two","five", "car", "bar", "homerun", "ou", "viva", "nova", "week", "shock", "bass", "treble", "staff", "light", "dark", "medium", "rare","common","key","board","bored","You","me","we","see","us","ten","nine","eight","mortal","sub","zero","fall","hungry","card","phone","random","control","pop","stop","drop","shut","down","open","up","shop","oh","no","as","ruff","riders","roll","where","my","dogs","at","bark","aa","bore","board","for","fig","rug","tug","bug","slug","drug","done","hey","bey","bye","by","try","sly","guy","tie","lie","tack","rack","duck","suck","luck","tuck","muck","pluck","stuck","struck","tick","sick","trick","kick","dock","sock","glock","pry","doc","site","test","aid","fade","laid","pic","xi","planet","coal","too","square","circle","standard","dab","bowl","drugs","macro"];
 	var chosenwords = new Array;
 	var chosenscores = new Array;
 	var wildcardcount = 0;
-	var alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
-	var scores = [1,3,3,2,1,4,2,4,1,8,5,1,3,1,1,3,10,1,1,1,4,1,4,8,4,10];
+
 
 
 
@@ -232,78 +237,85 @@ h2{
 //find valid words
 
 	function wordFind(){
-		for(a = 0; a < wordarray.length; a++){
-			var theWord = wordarray[a];
-			var theWordtemp = theWord;
-
-			for (i = 0; i < letterarray.length; i++){		
-				var b = theWordtemp.search(letterarray[i]);		
-				if (b === -1){
-				}
-				else if (b != -1){
-					theWordtemp = theWordtemp.replace(letterarray[i],"");
+		for(let x = 0; x < wordarray.length; x++){
+			let thisWord = wordarray[x];
+			for (let x = 0; x < letterarray.length; x++){		
+				let y = thisWord.search(letterarray[x]);		
+				if (y != -1){
+					thisWord = thisWord.replace(letterarray[x],"");
 				}
 			}
-			if(theWordtemp.length <= wildcardcount){		
-			chosenwords.push(theWord);
+			if(thisWord.length <= wildcardcount){		
+			var thisScore = scoreFind(wordarray[x]);
+			var thisobject = {word: wordarray[x], score: thisScore};
+			//chosenwords.push(wordarray[x]);
+			//chosenscores.push(thisScore);
+			chosenwords.push(thisobject.word);
+			chosenscores.push(thisobject.score);
+			
+			//scorefind(wordarray[x]);
 			}	
-		}//a
-			scoreFind();
+		}
+			//scoreFind();
+			sortScores();
 	}
 	
 //Figure out the scores of each word
 
-	function scoreFind(){
-		for (a = 0; a < chosenwords.length; a++){
-			var thisword = chosenwords[a];
-			var scoretotal = 0;
-			var i = 0;
-			var wammy = new Array;
-			var thiswordsorted = thisword.split("");
-			thiswordsorted = thiswordsorted.sort();	
-			for(z = 0; z< thisword.length;z++){
-				if(thiswordsorted[z] == thiswordsorted[z+1]){
-					 wammy.push(thiswordsorted[z]);
+	function scoreFind(thisWord){
+		//for (let x = 0; x < chosenwords.length; x++){
+		//for (let x of chosenwords){
+			//let thisWord = chosenwords[x];
+			let scoretotal = 0;
+			let wammy = new Array;
+			var thiswordsorted = thisWord.split("");
+			thiswordsorted = thiswordsorted.sort();
+
+		//This is for dealing with double 
+			for(let x = 0; x< thisWord.length;x++){
+				if(thiswordsorted[x] == thiswordsorted[x+1]){
+					 wammy.push(thiswordsorted[x]);
 				}	
 			}		
-			for(c = 0; c < alphabet.length; c++){		
-				var letterscore = thisword.search(alphabet[c]);		
-				if(letterscore != -1){	
-						if(alphabet[c]!= undefined){	
-							scoretotal += scores[c];
-							for(d = 0;d <= wammy.length;d++){
-								if(alphabet[c] == wammy[d]){
-									scoretotal += scores[c];
+			for(let x = 0; x < alphabet.length; x++){	
+			//for (let val of alphabet){	
+				let score = thisWord.search(alphabet[x]);		
+				if(score != -1){	
+						if(alphabet[x]!= undefined){	
+							scoretotal += scores[x];
+							for(let y = 0;y <= wammy.length;y++){
+								if(alphabet[x] == wammy[y]){
+									scoretotal += scores[x];
 								}								
 							}
 						}
 				}	
 			}
-		chosenscores.push(scoretotal);
-		}
-		sortScores();
+		//chosenscores.push(scoretotal);
+		//}
+		//sortScores();
+		return scoretotal;
 	}
 
 //Sort scores from lowest to highest.
 
 	function sortScores(){
-		for (a = 0; a<chosenwords.length; a++){
-			for(b = 0; b<(chosenwords.length-a); b++){
-				if (chosenscores[b]>chosenscores[b+1]){
-					chosenwords.splice(b,2,chosenwords[b+1],chosenwords[b]);
-					chosenscores.splice(b,2,chosenscores[b+1],chosenscores[b]);
+		for (let x = 0; x < chosenwords.length; x++){
+			for(let y = 0; y<(chosenwords.length-x); y++){
+				if (chosenscores[y]>chosenscores[y+1]){
+					chosenwords.splice(y,2,chosenwords[y+1],chosenwords[y]);
+					chosenscores.splice(y,2,chosenscores[y+1],chosenscores[y]);
 				}			
 			}	
 		}	
-		for (a = 0; a<=chosenwords.length; a++){
-			if(a != 0){
+		for (let x = 0; x<=chosenwords.length; x++){
+			if(x != 0 && x <= 10){
 				var cell = document.createElement("li"); 
-				var thescore;
-				var theinfo = [a,chosenwords[chosenwords.length - a],chosenscores[chosenwords.length - a]+(" pts")];		 
+				var theinfo = [x,chosenwords[chosenwords.length - x],chosenscores[chosenwords.length - x]+(" pts")];		 
 				var thetag = ["h3","h1","h2"];
-				for(i = 0; i< 3; i++){
-					var info =	document.createTextNode(theinfo[i]);
-					var seperator = document.createElement(thetag[i]);
+				for(let x = 0; x< 3; x++){
+					var info =	document.createTextNode(theinfo[x]);
+					var seperator = document.createElement(thetag[x]);
 					seperator.appendChild(info);
 					cell.appendChild(seperator);
 				}		 
@@ -317,11 +329,10 @@ h2{
 //Add and remove letters from list
 	function letterLoad(){
 
-		var x = this.innerHTML;	
+		let x = this.innerHTML;	
 		if (x == "_"){
 			wildcardcount++;
-		}
-		
+		}		
 		letterarray.push(x);	
 		var cell = document.createElement("li");
 		cell.className = "chosenletter";
@@ -351,27 +362,29 @@ h2{
 //Create UI grid	
 	function createGrid(){
 		
-		for(m = 0; m <= alphabet.length; m++){
-			var temp = alphabet[m];
-			if (m == alphabet.length){
-				temp = "_";
+		for(let x = 0; x <= alphabet.length; x++){
+			let letter = alphabet[x];
+			if (x == alphabet.length){
+				letter = "_";
 			}
-			var cell = document.createElement("li");
+			let cell = document.createElement("li");
 			cell.className = "lettergridtiles";
 			cell.addEventListener("click",letterLoad);	
-			var theletter = document.createTextNode(temp);
-			cell.appendChild(theletter);
+			let tile = document.createTextNode(letter);
+			cell.appendChild(tile);
 			document.getElementById("lettergrid").appendChild(cell);
 		}
 
 	}//createGrid
 
 window.addEventListener('load', createGrid);
+
+
 //Window resize stuff
 	function gridAdjust(){
 		var tempwidth = getElementsByClass('chosenletter').offsetWidth;
 		alert(tempwidth);
-		for (m = 0; m < letterarray.length; m++){	
+		for (let x = 0; x < letterarray.length; x++){	
 			
 			chosenTiles[k].style.height() = tempwidth;
 		}
@@ -379,6 +392,8 @@ window.addEventListener('load', createGrid);
 	}
 window.addEventListener('resize', gridAdjust);
 </script>
+
+
 <ul id ="lettergrid"></ul>
 <ul id="chosenletters"></ul>
 <ul id ="scorelist" style="font-size:20px;"></ul> 
